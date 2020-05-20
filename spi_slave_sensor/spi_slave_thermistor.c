@@ -28,7 +28,7 @@
 * Related Document: See Readme.md
 *
 *******************************************************************************
-* (C) 2019, Cypress Semiconductor Corporation. All rights reserved.
+* (C) 2019-2020, Cypress Semiconductor Corporation. All rights reserved.
 *******************************************************************************
 * This software, including source code, documentation and related materials
 * ("Software"), is owned by Cypress Semiconductor Corporation or one of its

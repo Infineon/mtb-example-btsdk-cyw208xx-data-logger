@@ -1,5 +1,5 @@
 #
-# Copyright 2019, Cypress Semiconductor Corporation or a subsidiary of
+# Copyright 2019-2020, Cypress Semiconductor Corporation or a subsidiary of
 # Cypress Semiconductor Corporation. All Rights Reserved.
 #
 # This software, including source code, documentation and related
@@ -38,17 +38,9 @@ endif
 #
 # Basic Configuration
 #
-APPNAME=DUAL_SPI_MASTER
-TOOLCHAIN=GCC_ARM
-CONFIG=Debug
-VERBOSE=
 
 # default target
 TARGET=CYW920819EVB-02
-
-SUPPORTED_TARGETS = \
-  CYW920819EVB-02 \
-  CYW920820EVB-02 
 
 TARGET_DEVICE_MAP = \
   CYW920819EVB-02/20819A1 \
@@ -56,13 +48,35 @@ TARGET_DEVICE_MAP = \
 
 CY_TARGET_DEVICE = $(patsubst $(TARGET)/%,%,$(filter $(TARGET)%,$(TARGET_DEVICE_MAP)))
 
-ifeq ($(filter $(TARGET),$(SUPPORTED_TARGETS)),)
-$(error TARGET $(TARGET) not supported for this code example)
-endif
+# Name of application (used to derive name of final linked file).
+APPNAME=DUAL_SPI_MASTER
 
+# Name of toolchain to use. Options include:
 #
+# GCC_ARM -- GCC 7.2.1, provided with ModusToolbox IDE
+# ARM     -- ARM Compiler (must be installed separately)
+# IAR     -- IAR Compiler (must be installed separately)
+#
+# See also: CY_COMPILER_PATH below
+TOOLCHAIN=GCC_ARM
+
+# Default build configuration. Options include:
+#
+# Debug -- build with minimal optimizations, focus on debugging.
+# Release -- build with full optimizations
+# Custom -- build with custom configuration, set the optimization flag in CFLAGS
+CONFIG=Debug
+
+# If set to "true" or "1", display full command-lines when building.
+VERBOSE=
+
+################################################################################
 # Advanced Configuration
-#
+################################################################################
+# By default the build system automatically looks in the Makefile's directory
+# tree for source code and builds it. The SOURCES variable can be used to
+# manually add source code to the build process from a location not searched
+# by default, or otherwise not found by the build system.
 SOURCES=
 INCLUDES=\
     $(CY_BASELIB_PATH)/include \
@@ -72,16 +86,45 @@ INCLUDES=\
     $(CY_BASELIB_PATH)/internal/$(CY_TARGET_DEVICE) \
     $(CY_SHARED_PATH)/dev-kit/btsdk-include \
     $(CY_BSP_PATH)
+# Add additional defines to the build process (without a leading -D).
 DEFINES=
+
+# Select softfp or hardfp floating point. Default is softfp.
 VFP_SELECT=
+
+# Additional / custom C compiler flags.
+#
+# NOTE: Includes and defines should use the INCLUDES and DEFINES variable
+# above.
 CFLAGS=
+
+# Additional / custom C++ compiler flags.
+#
+# NOTE: Includes and defines should use the INCLUDES and DEFINES variable
+# above.
 CXXFLAGS=
+
+# Additional / custom assembler flags.
+#
+# NOTE: Includes and defines should use the INCLUDES and DEFINES variable
+# above.
 ASFLAGS=
+
+# Additional / custom linker flags.
 LDFLAGS=
+
+# Additional / custom libraries to link in to the application.
 LDLIBS=
+
+# Path to the linker script to use (if empty, use the default linker script).
 LINKER_SCRIPT=
+
+# Custom pre-build commands to run.
 PREBUILD=
+
+# Custom post-build commands to run.
 POSTBUILD=
+
 FEATURES=
 
 #
@@ -102,13 +145,19 @@ endif
 CY_APP_DEFINES+=\
     -DWICED_BT_TRACE_ENABLE
 
-CY_RECIPE_EXTRA_LIBS+=-lgcc
-
+# Enable optional code that is ordinarily disabled by default.
 #
-# Components (middleware libraries)
+# Available components depend on the specific targeted hardware and firmware
+# in use. In general, if you have
+#
+#    COMPONENTS=foo bar
+#
+# ... then code in directories named COMPONENT_foo and COMPONENT_bar will be
+# added to the build
 #
 COMPONENTS += bsp_design_modus
-COMPONENTS += thermistor_ncu15wf104_lib
+
+CY_CONFIG_MODUS_FILE:=
 
 ################################################################################
 # Paths
@@ -120,8 +169,14 @@ CY_APP_PATH=.
 # Path (absolute or relative) to the bt-sdk folder (at repo root)
 CY_SHARED_PATH=$(CY_APP_PATH)/../../wiced_btsdk
 
+# absolute path to the root of the BTSDK
+CY_SHARED_PATH_ABS=$(CURDIR)/../../../wiced_btsdk
+
 # Path (absolute or relative) to the base library
 CY_BASELIB_PATH=$(CY_SHARED_PATH)/dev-kit/baselib/$(CY_TARGET_DEVICE)
+
+# absolute path to the root of the BTSDK
+CY_SHARED_PATH_ABS=$(CURDIR)/../../../wiced_btsdk
 
 # Path to the bsp library
 CY_BSP_PATH=$(CY_SHARED_PATH)/dev-kit/bsp/TARGET_$(TARGET)
@@ -159,11 +214,14 @@ endif
 # path to WICED tools root folder
 CY_WICED_TOOLS_ROOT?=$(CY_SHARED_PATH)/dev-kit/btsdk-tools
 
+# tools that can be launched with "make open CY_OPEN_TYPE=<tool>
+CY_BT_APP_TOOLS=BTSpy ClientControl
+
 # getlibs path
 CY_GETLIBS_PATH=.
 
 # paths to shared_libs targets
-SEARCH_LIBS_AND_INCLUDES=$(CY_BSP_PATH) $(CY_BASELIB_PATH) $(CY_SHARED_PATH)/dev-kit/libraries/btsdk-ble
+SEARCH_LIBS_AND_INCLUDES=$(CY_BSP_PATH) $(CY_BASELIB_PATH) $(CY_SHARED_PATH)/dev-kit/libraries/btsdk-drivers
 ifeq ($(OTA_FW_UPGRADE),1)
 SEARCH_LIBS_AND_INCLUDES+=$(CY_SHARED_PATH)/dev-kit/libraries/btsdk-ota
 endif
