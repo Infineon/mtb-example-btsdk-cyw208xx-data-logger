@@ -1,14 +1,24 @@
-# SPI-Based Datalogger
+# BTSDK SPI-Based Datalogger
 
 This code example includes two applications that demonstrate the operation of multiple Serial Peripheral Interface (SPI) interfaces using the CYW208XX Bluetooth SoC and ModusToolbox™. The first application demonstrates the operation of two SPI masters – one for collecting sensor data and the other for logging the data to external Flash. The second application demonstrates the operation of an SPI slave  used for providing sensor data to the first application.
 
 ## Requirements
-- [ModusToolbox™ software](https://www.cypress.com/products/modustoolbox-software-environment) v2.1
-- Programming Language: C
 
-## Supported Kits
-* [CYW920819EVB-02 Evaluation Kit](http://www.cypress.com/CYW920819EVB-02) (CYW920819EVB-02)
-* [CYW920820EVB-02 Evaluation kit](http://www.cypress.com/CYW920820EVB-02) (CYW920820EVB-02)
+- [ModusToolbox® software](https://www.cypress.com/products/modustoolbox-software-environment) v2.2
+
+    **Note:** This code example version requires ModusToolbox software version 2.2 or later and is not backward compatible with v2.1 or older versions. If you cannot move to ModusToolbox v2.2, use the latest compatible version of this example: [latest-v1.X](https://github.com/cypresssemiconductorco/mtb-example-btsdk-cyw208xx-data-logger/tree/latest-v1.X).
+- Board Support Package (BSP) minimum required version: 2.8.0
+- Programming Language: C
+- Associated Parts: [CYW20819](https://www.cypress.com/datasheet/CYW20819), [CYW20820](https://www.cypress.com/datasheet/CYW20820)
+
+## Supported Toolchains (make variable 'TOOLCHAIN')
+
+- GNU Arm® Embedded Compiler v9.3.1 (GCC_ARM) - Default value of `TOOLCHAIN`
+
+## Supported Kits (make variable 'TARGET')
+
+- [CYW920819EVB-02 Evaluation Kit](http://www.cypress.com/CYW920819EVB-02)
+- [CYW920820EVB-02 Evaluation kit](http://www.cypress.com/CYW920820EVB-02)
 
 ## Hardware Setup
 These applications run on two separate kits. Both applications use the kit’s default configuration. See the [kit guide](http://www.cypress.com/CYW920819EVB-02), if required, to ensure the kit is configured correctly. [Figure 1](#figure-1-block-diagram) shows the block diagram depicting the connections between different blocks of two evaluation boards.
@@ -37,53 +47,59 @@ This example requires no additional software or tools.
 
 ### In Eclipse IDE for ModusToolbox:
 
-1. Click the **New Application** link in the Quick Panel (or, use **File** > **New** > **ModusToolbox Application**).
+1. Click the **New Application** link in the **Quick Panel** (or, use **File** > **New** > **ModusToolbox Application**). This launches the [Project Creator](http://www.cypress.com/ModusToolboxProjectCreator) tool.
 
 2. Pick a kit supported by the code example from the list shown in the **Project Creator - Choose Board Support Package (BSP)** dialog.
 
+   When you select a supported kit, the example is reconfigured automatically to work with the kit. To work with a different supported kit later, use the [Library Manager](https://www.cypress.com/ModusToolboxLibraryManager) to choose the BSP for the supported kit and deselect the other BSPs. **Keep only the required BSP in your application** for more information refer [BTSDK Release Notes](https://community.cypress.com/community/software-forums/modustoolbox-bt-sdk). You can use the Library Manager to select or update the BSP and firmware libraries used in this application. To access the Library Manager, click the link from the Quick Panel.
+
+   You can also just start the application creation process again and select a different kit.
+
    If you want to use the application for a kit not listed here, you may need to update the source files. If the kit does not have the required resources, the application may not work.
 
-3. In the **Project Creator - Select Application** dialog, choose **wiced\_btsdk** and click **create**. This project contains the SDK, which is used by all BTSDK applications. You will need to create this project just once in the working directory (i.e., Eclipse workspace). Ignore if you have already created this project.
+3. In the **Project Creator - Select Application** dialog, choose the example by enabling the checkbox.
 
-    **Note**: Do not change the name of this project. All BTSDK apps use this project name in application makefiles.
+4. Optionally, change the suggested **New Application Name**.
 
-4. After 'wiced\_btsdk' project is created, choose example application from the same **Project Creator - Select Application** dialog.
+5. Enter the local path in the **Application(s) Root Path** field to indicate where the application needs to be created.
 
-5. Optionally, update the **Application Name** and **Location** fields with the application name and local path where the application is created.
+   Applications that can share libraries can be placed in the same root path.
 
 6. Click **Create** to complete the application creation process.
 
-For more details, see the Eclipse IDE for ModusToolbox User Guide: *{ModusToolbox install directory}/ide_{version}/docs/mt_ide_user_guide.pdf*.
+For more details, see the [Eclipse IDE for ModusToolbox User Guide](https://www.cypress.com/MTBEclipseIDEUserGuide) (locally available at *{ModusToolbox install directory}/ide_{version}/docs/mt_ide_user_guide.pdf*).
 
-### In Command-Line Interface (CLI):
+   **Note**: Both the dual SPI master and SPI slave sensor applications are created for the same kit that you have selected in Step 2.
 
-1. Download and unzip this repository onto your local machine, or clone the repository as follows:
 
-    1. Clone 'wiced_btsdk' repo first with the `git clone` command. You will need to create this project just once in the working directory.
+### In Command-line Interface (CLI):
 
-    ```
-    > git clone https://github.com/cypresssemiconductorco/wiced_btsdk
-    ```
-    2. Clone the application repo with the `git clone` command. The application repo directory should be at the same folder level as 'wiced_btsdk'.
+ModusToolbox provides the Project Creator as both a GUI tool and a command line tool to easily create one or more ModusToolbox applications. See the "Project Creator Tools" section of the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) for more details.
 
-2. Open a CLI terminal and navigate to the *wiced_btsdk* folder. Import the required libraries by executing the `make getlibs` command.
+Alternatively, you can manually create the application using the following steps.
 
-   On Linux and macOS, you can use any terminal application. On Windows, navigate to the modus-shell directory (*{ModusToolbox install directory}/tools_\<version>/modus-shell*) and run *Cygwin.bat*.
+1. Download and unzip this repository onto your local machine, or clone the repository.
 
-   ```
-   > cd <path to wiced_btsdk>
-   > make getlibs
-   ```
+2. Open a CLI terminal and navigate to the application folder(GATT_client or GATT_server).
+
+   On Linux and macOS, you can use any terminal application. On Windows, open the **modus-shell** app from the Start menu.
+
+    **Note:** The cloned application contains a default BSP file (*TARGET_xxx.mtb*) in the *deps* folder. Use the [Library Manager](https://www.cypress.com/ModusToolboxLibraryManager) (`make modlibs` command) to select and download a different BSP file, if required and deselect the other BSPs. **Keep only the required BSP in your application** for more information refer [BTSDK Release Notes](https://community.cypress.com/community/software-forums/modustoolbox-bt-sdk). If the selected kit does not have the required resources or is not [supported](#supported-kits-make-variable-target), the application may not work.
+
+3. Import the required libraries by executing the `make getlibs` command.
+
+Various CLI tools include a `-h` option that prints help information to the terminal screen about that tool. For more details, see the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox install directory}/docs_{version}/mtb_user_guide.pdf*).
 
 ### In Third-party IDEs:
 
-1. Follow the instructions from the CLI section to download or clone the repository, and import the libraries using the `make getlibs` command.
+1. Follow the instructions from the [CLI](#in-command-line-interface-cli) section to create the application, and import the libraries using the `make getlibs` command.
 
 2. Export the application to a supported IDE using the `make <ide>` command.
 
+    For a list of supported IDEs and more details, see the "Exporting to IDEs" section of the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox install directory}/docs_{version}/mtb_user_guide.pdf*.
+
 3. Follow the instructions displayed in the terminal to create or import the application as an IDE project.
 
-For more details, see the "Exporting to IDEs" section of the ModusToolbox User Guide: *{ModusToolbox install directory}/ide_{version}/docs/mtb_user_guide.pdf*.
 
 ## Operation
 1. Connect two boards to your PC using the provided USB cable. Note down the port enumerations for each device in **Device Manager > Ports (COM & LPT)** (Windows only). The enumeration with a smaller number is the **WICED HCI UART port** and the other is **WICED Peripheral UART port**.   
@@ -252,14 +268,12 @@ Document Title: *CE226537* – *SPI-Based Datalogger*
 | ------- | --------------------- |
 | 1.0.0   | New code example      |
 | 1.1.0   | Updated to support ModusToolbox software v2.1|
-
-------
-
+| 2.0.0   | Major update to support ModusToolbox software v2.2 <br> This version is not backward compatible with ModusToolbox software v2.1 |
 
 All other trademarks or registered trademarks referenced herein are the property of their respective
 owners.
 
-![Banner](images/banner.png)
+![Banner](images/ifx-cy-banner.png)
 
 -------------------------------------------------------------------------------
 

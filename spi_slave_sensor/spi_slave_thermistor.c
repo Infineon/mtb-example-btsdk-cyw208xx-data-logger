@@ -72,6 +72,7 @@
 #include "wiced_hal_puart.h"
 #include "wiced_timer.h"
 #include "wiced_rtos.h"
+#include "wiced_thermistor.h"
 
 /******************************************************************************
  *                                Constants
