@@ -37,24 +37,25 @@
 * GND
 *
 * Related Document: See Readme.md
+*******************************************************************************/
+/*******************************************************************************
+* Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
+* an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
-*******************************************************************************
-* (c) 2019-2020, Cypress Semiconductor Corporation. All rights reserved.
-*******************************************************************************
-* This software, including source code, documentation and related materials
-* ("Software"), is owned by Cypress Semiconductor Corporation or one of its
-* subsidiaries ("Cypress") and is protected by and subject to worldwide patent
-* protection (United States and foreign), United States copyright laws and
-* international treaty provisions. Therefore, you may use this Software only
-* as provided in the license agreement accompanying the software package from
-* which you obtained this Software ("EULA").
-*
+* This software, including source code, documentation and related
+* materials ("Software") is owned by Cypress Semiconductor Corporation
+* or one of its affiliates ("Cypress") and is protected by and subject to
+* worldwide patent protection (United States and foreign),
+* United States copyright laws and international treaty provisions.
+* Therefore, you may use this Software only as provided in the license
+* agreement accompanying the software package from which you
+* obtained this Software ("EULA").
 * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
-* non-transferable license to copy, modify, and compile the Software source
-* code solely for use in connection with Cypress's integrated circuit products.
-* Any reproduction, modification, translation, compilation, or representation
-* of this Software except as specified above is prohibited without the express
-* written permission of Cypress.
+* non-transferable license to copy, modify, and compile the Software
+* source code solely for use in connection with Cypress's
+* integrated circuit products.  Any reproduction, modification, translation,
+* compilation, or representation of this Software except as specified
+* above is prohibited without the express written permission of Cypress.
 *
 * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
 * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
@@ -65,49 +66,10 @@
 * not authorize its products for use in any products where a malfunction or
 * failure of the Cypress product may reasonably be expected to result in
 * significant property damage, injury or death ("High Risk Product"). By
-* including Cypress's product in a High Risk Product, the manufacturer of such
-* system or application assumes all risk of such use and in doing so agrees to
-* indemnify Cypress against all liability.
+* including Cypress's product in a High Risk Product, the manufacturer
+* of such system or application assumes all risk of such use and in doing
+* so agrees to indemnify Cypress against all liability.
 *******************************************************************************/
-
-/*******************************************************************************
- * File Name: dual_spi_master.c
- *
- * Description:
- * WICED sample application for SPI master running two SPI instances
- *
- * This application demonstrates how to use SPI driver interface to send and
- * receive bytes or a stream of bytes over the SPI hardware as a master and then
- * store the received data to SFLASH.
- *
- * Features demonstrated:
- * - SPI WICED APIs
- * - SFLASH WICED APIs
- * - WICED RTOS APIs
- *
- * Requirements and Usage:
- * Program 1 kit with the dual_spi_master app and another kit with
- * spi_slave_sensor app. Connect the SPI lines and ground on the 2 kits.
- * Power on the kits. You can see the logs through PUART
- *
- * Hardware Connections:
- * This example configures the following SPI functionalities in
- * CYW9208XXEVB-02 Evaluation board as follows:
- *
- * SPI sensor
- * CLK     WICED_P15    J3.8
- * MISO    WICED_P14    J3.10
- * MOSI    WICED_P13    J12.6
- * CS      WICED_P12    J12.5
- * GND
- *
- * SFLASH
- * CLK     WICED_P09    J3.5
- * MISO    WICED_P17    J3.6
- * MOSI    WICED_P06    J3.7
- * CS      WICED_P11    J2.9
- * GND
- */
 
 /******************************************************************************
  *                                Includes
@@ -126,7 +88,7 @@
 #include "wiced_hal_nvram.h"
 
 /******************************************************************************
- *                                Constants
+ *                                Macros
  ******************************************************************************/
 /* Threads defines */
 /* Sensible stack size for most threads*/
@@ -274,9 +236,9 @@ void            spi_sensor_utility (data_packet *send_msg, data_packet *rec_msg)
  *                                Function Definitions
  ******************************************************************************/
 /*******************************************************************************
-* Function Name: void application_start(void)
+* Function Name: void application_start
 ********************************************************************************
-* Summary: Initialize transport configuration and register BLE
+* Summary: Initialize transport configuration and register Bluetooth LE
 *          management event callback.
 *
 * Parameters:
@@ -287,33 +249,35 @@ void            spi_sensor_utility (data_packet *send_msg, data_packet *rec_msg)
 *
 *******************************************************************************/
 
-void application_start(void)
+APPLICATION_START()
 {
     wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_PUART );
     if(WICED_SUCCESS != wiced_bt_stack_init( bt_cback, NULL, NULL ))
     {
-        WICED_BT_TRACE("BT stack initialization failed \n\r");
+        WICED_BT_TRACE("Bluetooth LE stack initialization failed \n\r");
     }
 }
 
 /*******************************************************************************
-* Function Name: wiced_result_t bt_cback(wiced_bt_management_evt_t event,
-*                                        wiced_bt_management_evt_data_t *p_event_data)
+* Function Name: wiced_result_t bt_cback
 ********************************************************************************
 * Summary:
 *   This is a Bluetooth management event handler function to receive events from
-*   BLE stack and process as per the application.
+*   Bluetooth LE stack and process as per the application.
 *
 * Parameters:
-*   wiced_bt_management_evt_t event             : BLE event code of one byte length
-*   wiced_bt_management_evt_data_t *p_event_data: Pointer to BLE management event structures
+*   wiced_bt_management_evt_t event             :
+*                                 Bluetooth LE event code of one byte length
+*   wiced_bt_management_evt_data_t *p_event_data:
+*                                 Pointer to Bluetooth LE management event structures
 *
 * Return:
 *  wiced_result_t: Error code from WICED_RESULT_LIST or BT_RESULT_LIST
 *
 *******************************************************************************/
 
-wiced_result_t bt_cback( wiced_bt_management_evt_t event, wiced_bt_management_evt_data_t *p_event_data )
+wiced_result_t bt_cback( wiced_bt_management_evt_t event,
+                         wiced_bt_management_evt_data_t *p_event_data )
 {
     wiced_result_t result = WICED_SUCCESS;
 
@@ -335,7 +299,7 @@ wiced_result_t bt_cback( wiced_bt_management_evt_t event, wiced_bt_management_ev
 }
 
 /*******************************************************************************
-* Function Name: void initialize_app( void )
+* Function Name: void initialize_app
 ********************************************************************************
 * Summary:This functions initializes the SPI,SFLASH, threads, message queue,
 *         semaphore and GPIO
@@ -426,7 +390,7 @@ void initialize_app( void )
         WICED_BT_TRACE( "Failed to create SFLASH thread \n\r" );
     }
 
-    WICED_BT_TRACE( "Press SW3 to read temperature records\n\r" );
+    WICED_BT_TRACE( "Press User Button to read temperature records\n\r" );
     msg_q = wiced_rtos_create_queue();
     if(NULL == msg_q)
     {
@@ -448,7 +412,7 @@ void initialize_app( void )
 }
 
 /*******************************************************************************
-* Function Name: void spi_sensor_thread(uint32_t arg )
+* Function Name: void spi_sensor_thread
 ********************************************************************************
 * Summary:Starts and maintains transfer of SPI sensor data.
 *         Also, once the queue is half full it signals spi_master_driver_2
@@ -459,7 +423,6 @@ void initialize_app( void )
 *
 * Return:
 *   None
-*
 *******************************************************************************/
 
 void spi_sensor_thread(uint32_t arg )
@@ -598,7 +561,7 @@ void spi_sensor_thread(uint32_t arg )
 }
 
 /*******************************************************************************
-* Function Name: void sflash_thread(uint32_t arg )
+* Function Name: void sflash_thread
 ********************************************************************************
 * Summary: Pops data from queue and writes to SFLASH.
 *
@@ -679,7 +642,7 @@ void sflash_thread(uint32_t arg )
 }
 
 /*******************************************************************************
-* Function Name: static void button_cback( void )
+* Function Name: static void button_cback
 ********************************************************************************
 * Summary:ISR reads data from SFLASH on button press.
 *
@@ -734,7 +697,7 @@ static void button_cback( void *data, uint8_t port_pin )
 }
 
 /*******************************************************************************
-* Function Name: void spi_sensor_utility(data_packet *send_msg,data_packet *rec_msg)
+* Function Name: void spi_sensor_utility
 ********************************************************************************
 * Summary:Utility function that performs SPI transactions with SPI sensor.
 *

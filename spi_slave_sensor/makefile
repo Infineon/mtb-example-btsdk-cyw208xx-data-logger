@@ -208,7 +208,4 @@ endif
 
 $(info Tools Directory: $(CY_TOOLS_DIR))
 
-# tools that can be launched with "make open CY_OPEN_TYPE=<tool>
-CY_BT_APP_TOOLS=BTSpy ClientControl
-
 include $(CY_TOOLS_DIR)/make/start.mk

@@ -26,24 +26,25 @@
 * GND
 *
 * Related Document: See Readme.md
+*******************************************************************************/
+/*******************************************************************************
+* Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
+* an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
-*******************************************************************************
-* (C) 2019-2020, Cypress Semiconductor Corporation. All rights reserved.
-*******************************************************************************
-* This software, including source code, documentation and related materials
-* ("Software"), is owned by Cypress Semiconductor Corporation or one of its
-* subsidiaries ("Cypress") and is protected by and subject to worldwide patent
-* protection (United States and foreign), United States copyright laws and
-* international treaty provisions. Therefore, you may use this Software only
-* as provided in the license agreement accompanying the software package from
-* which you obtained this Software ("EULA").
-*
+* This software, including source code, documentation and related
+* materials ("Software") is owned by Cypress Semiconductor Corporation
+* or one of its affiliates ("Cypress") and is protected by and subject to
+* worldwide patent protection (United States and foreign),
+* United States copyright laws and international treaty provisions.
+* Therefore, you may use this Software only as provided in the license
+* agreement accompanying the software package from which you
+* obtained this Software ("EULA").
 * If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
-* non-transferable license to copy, modify, and compile the Software source
-* code solely for use in connection with Cypress's integrated circuit products.
-* Any reproduction, modification, translation, compilation, or representation
-* of this Software except as specified above is prohibited without the express
-* written permission of Cypress.
+* non-transferable license to copy, modify, and compile the Software
+* source code solely for use in connection with Cypress's
+* integrated circuit products.  Any reproduction, modification, translation,
+* compilation, or representation of this Software except as specified
+* above is prohibited without the express written permission of Cypress.
 *
 * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND,
 * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED
@@ -54,9 +55,9 @@
 * not authorize its products for use in any products where a malfunction or
 * failure of the Cypress product may reasonably be expected to result in
 * significant property damage, injury or death ("High Risk Product"). By
-* including Cypress's product in a High Risk Product, the manufacturer of such
-* system or application assumes all risk of such use and in doing so agrees to
-* indemnify Cypress against all liability.
+* including Cypress's product in a High Risk Product, the manufacturer
+* of such system or application assumes all risk of such use and in doing
+* so agrees to indemnify Cypress against all liability.
 *******************************************************************************/
 
 /******************************************************************************
@@ -70,12 +71,14 @@
 #include "wiced_platform.h"
 #include "wiced_hal_pspi.h"
 #include "wiced_hal_puart.h"
+#include "wiced_hal_adc.h"
+#include "wiced.h"
 #include "wiced_timer.h"
 #include "wiced_rtos.h"
 #include "wiced_thermistor.h"
 
 /******************************************************************************
- *                                Constants
+ *                                Macros
  ******************************************************************************/
 
 /* Using SPI instance to replicate SPI Slave as sensor */
@@ -105,6 +108,7 @@ enum
 #define NORM_FACTOR                         (100)
 #define MAX_RETRIES                         (25)
 #define RESET_COUNT                         (0)
+
 /*******************************************************************************
  *                                Structures
  ******************************************************************************/
@@ -120,7 +124,7 @@ typedef struct
  *                                Variables Definitions
  ******************************************************************************/
 
-
+thermistor_cfg_t  thermistor_cfg;
 /******************************************************************************
  *                                Function Prototypes
  ******************************************************************************/
@@ -129,17 +133,19 @@ wiced_result_t      bt_cback(wiced_bt_management_evt_t event,
 
 static void         initialize_app(void);
 
+static int16_t      get_ambient_temperature(void);
+
 extern void         thermistor_init(void);
 
-extern int16_t      thermistor_read(void);
+extern int16_t      thermistor_read(thermistor_cfg_t *p_thermistor_cfg);
 
 /*******************************************************************************
  *                           Function Definitions
  ******************************************************************************/
 /*******************************************************************************
-* Function Name: void application_start(void)
+* Function Name: void application_start
 ********************************************************************************
-* Summary: Initialize transport configuration and register BLE
+* Summary: Initialize transport configuration and register Bluetooth LE
 *          management event callback.
 *
 * Parameters:
@@ -150,36 +156,38 @@ extern int16_t      thermistor_read(void);
 *
 *******************************************************************************/
 
-void application_start(void)
+APPLICATION_START()
 {
     wiced_set_debug_uart( WICED_ROUTE_DEBUG_TO_PUART );
 
     if(WICED_SUCCESS != wiced_bt_stack_init( bt_cback, NULL, NULL ))
     {
-        WICED_BT_TRACE("BT stack initialization failed \r\n");
+        WICED_BT_TRACE("Bluetooth LE stack initialization failed \r\n");
     }
 
 
 }
 
 /*******************************************************************************
-* Function Name: wiced_result_t bt_cback(wiced_bt_management_evt_t event,
-*                                        wiced_bt_management_evt_data_t *p_event_data)
+* Function Name: wiced_result_t bt_cback
 ********************************************************************************
 * Summary:
 *   This is a Bluetooth management event handler function to receive events from
-*   BLE stack and process as per the application.
+*   Bluetooth LE stack and process as per the application.
 *
 * Parameters:
-*   wiced_bt_management_evt_t event             : BLE event code of one byte length
-*   wiced_bt_management_evt_data_t *p_event_data: Pointer to BLE management event structures
+*   wiced_bt_management_evt_t event             :
+*                             Bluetooth LE event code of one byte length
+*   wiced_bt_management_evt_data_t *p_event_data:
+*                             Pointer to Bluetooth LE management event structures
 *
 * Return:
 *  wiced_result_t: Error code from WICED_RESULT_LIST or BT_RESULT_LIST
 *
 *******************************************************************************/
 
-wiced_result_t bt_cback( wiced_bt_management_evt_t event, wiced_bt_management_evt_data_t *p_event_data )
+wiced_result_t bt_cback( wiced_bt_management_evt_t event,
+                         wiced_bt_management_evt_data_t *p_event_data )
 {
     wiced_result_t result = WICED_SUCCESS;
 
@@ -198,7 +206,7 @@ wiced_result_t bt_cback( wiced_bt_management_evt_t event, wiced_bt_management_ev
 }
 
 /*******************************************************************************
-* Function Name: void initialize_app( void )
+* Function Name: void initialize_app
 ********************************************************************************
 * Summary:This functions initializes the SPI Slave
 *
@@ -220,7 +228,6 @@ void initialize_app( void )
     uint8_t         retries             = RESET_COUNT;
     int16_t         thermistor_reading  = 0;
 
-    wiced_hal_pspi_reset(SPI);
 
     /*Initialize SPI slave*/
     wiced_hal_pspi_init( SPI,
@@ -236,8 +243,10 @@ void initialize_app( void )
     /*Enable Tx and Rx buffers*/
     wiced_hal_pspi_slave_enable_rx(SPI);
     wiced_hal_pspi_slave_enable_tx(SPI);
-
+    // Initialize thermistor
+    thermistor_cfg.high_pin = ADC_INPUT_P8;
     thermistor_init();
+    WICED_BT_TRACE("Thermistor initialization done!\n\r");
 
     while(1)
     {
@@ -296,7 +305,7 @@ void initialize_app( void )
 
                         /* Configuring send_data data packet to contain response
                            for command SEND_TEMPERATURE*/
-                        send_data.data = thermistor_read();
+                        send_data.data = get_ambient_temperature();
                         send_data.header = PACKET_HEADER;
                         wiced_hal_pspi_slave_tx_data(SPI,
                                                      sizeof(send_data),
@@ -328,4 +337,28 @@ void initialize_app( void )
         }
         wiced_rtos_delay_milliseconds(SLEEP_TIMEOUT, ALLOW_THREAD_TO_SLEEP);
     }
+}
+
+/*******************************************************************************
+ Function name:  get_ambient_temperature
+
+ Function Description:
+ @brief    Obtains ambient temperature from the thermistor.
+
+ @param  void
+
+ @return int16_t         Temperature reading from the thermistor.
+ ******************************************************************************/
+
+static int16_t get_ambient_temperature(void)
+{
+    volatile int16_t  temperature = 0;
+    /*
+     * Temperature values might vary to +/-2 degree Celsius
+     */
+    temperature = thermistor_read(&thermistor_cfg);
+    WICED_BT_TRACE("Temperature (in degree Celsius) \t\t%d.%02d \n\r",
+                  (temperature / NORM_FACTOR),
+                  ABS(temperature % NORM_FACTOR));
+    return temperature;
 }

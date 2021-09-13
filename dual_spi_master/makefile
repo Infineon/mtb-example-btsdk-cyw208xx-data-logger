@@ -154,6 +154,7 @@ CY_APP_DEFINES+=\
 # Components (middleware libraries)
 #
 COMPONENTS +=bsp_design_modus
+COMPONENTS += thermistor_ncu15wf104_lib
 
 ################################################################################
 # Paths
@@ -206,8 +207,5 @@ $(error Unable to find any of the available CY_TOOLS_PATHS -- $(CY_TOOLS_PATHS))
 endif
 
 $(info Tools Directory: $(CY_TOOLS_DIR))
-
-# tools that can be launched with "make open CY_OPEN_TYPE=<tool>
-CY_BT_APP_TOOLS=BTSpy ClientControl
 
 include $(CY_TOOLS_DIR)/make/start.mk
