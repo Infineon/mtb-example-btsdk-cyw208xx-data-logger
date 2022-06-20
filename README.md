@@ -4,13 +4,13 @@ This code example includes two applications that demonstrate the operation of mu
 
 ## Requirements
 
-- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.2 or later (tested with v2.3).
+- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.4.
 
-    **Note:** This code example version requires ModusToolbox&trade; software version 2.2 or later and is not backward compatible with v2.1 or older versions. If you cannot move to ModusToolbox&trade; software v2.2, use the latest compatible version of this example: [latest-v1.X](https://github.com/Infineon/mtb-example-btsdk-cyw208xx-data-logger/tree/latest-v1.X).
 - Board support package (BSP) minimum required version: 3.0.0
 - Programming language: C
 
-- Associated parts: [AIROC™ CYW20819 Bluetooth® & Bluetooth® LE system-on-chip](https://www.cypress.com/datasheet/CYW20819), [AIROC™ CYW20820 Bluetooth® & Bluetooth® LE system-on-chip](https://www.cypress.com/datasheet/CYW20820)
+- Associated parts: [AIROC™ CYW20819 Bluetooth® & Bluetooth® LE system-on-chip](https://www.cypress.com/datasheet/CYW20819), [AIROC™ CYW20820 Bluetooth® & Bluetooth® LE system-on-chip](https://www.infineon.com/dgdl/Infineon-CYW20820_Ultra_Low_Power_Bluetooth_LE_BR_EDR_Bluetooth_5.0_SoC-AdditionalTechnicalInformation-v06_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ee7e70770d1&utm_source=cypress&utm_medium=referral&utm_campaign=202110_globe_en_all_integration-datasheet)
+
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
 
@@ -18,11 +18,12 @@ This code example includes two applications that demonstrate the operation of mu
 
 ## Supported kits (make variable 'TARGET')
 
--  [CYW920819EVB-02 evaluation kit](https://www.cypress.com/CYW920819EVB-02) (`CYW920819EVB-02`) – Default value of `TARGET`
+-  [CYW920820M2EVB-01 evaluation kit](https://www.infineon.com/cms/en/product/wireless-connectivity/airoc-bluetooth-le-bluetooth-multiprotocol/cyw20820/) (`CYW920820M2EVB-01`) – Default value of `TARGET`
+-  [CYW920819EVB-02 evaluation kit](https://www.cypress.com/CYW920819EVB-02) (`CYW920819EVB-02`)
 -  [CYW920820EVB-02 evaluation kit](https://www.cypress.com/CYW920820EVB-02) (`CYW920820EVB-02`)
 
 ## Hardware setup
-These applications run on two separate kits. Both applications use the kit’s default configuration. See the [kit guide](http://www.cypress.com/CYW920819EVB-02), if required, to ensure the kit is configured correctly. [Figure 1](#figure-1-block-diagram) shows the block diagram depicting the connections between different blocks of two evaluation boards.
+These applications run on two separate kits. Both applications use the kit’s default configuration. See the [kit guide](http://www.cypress.com/CYW920819EVB-02), if required, to ensure that the kit is configured correctly. [Figure 1](#figure-1-block-diagram) shows the block diagram depicting the connections between different blocks of two evaluation boards.
 
    **Figure 1. Block diagram**
 
@@ -93,10 +94,10 @@ Argument | Description | Required/optional
 
 <br>
 
-The following example will clone the "[Hello World](https://github.com/Infineon/mtb-example-psoc6-hello-world)" application with the desired name "MyHelloWorld" configured for the *CY8CKIT-062-WIFI-BT* BSP into the specified working directory, *C:/mtb_projects*:
+The following example will clone the "[Data Logger](https://github.com/Infineon/mtb-example-btsdk-cyw208xx-data-logger)" application with the desired name "DataLogger" configured for the *CYW920820M2EVB-01* BSP into the specified working directory, *C:/mtb_projects*:
 
    ```
-   project-creator-cli --board-id CY8CKIT-062-WIFI-BT --app-id mtb-example-psoc6-hello-world --user-app-name MyHelloWorld --target-dir "C:/mtb_projects"
+   project-creator-cli --board-id CYW920820M2EVB-01 --app-id mtb-example-btsdk-cyw208xx-data-logger --user-app-name DataLogger --target-dir "C:/mtb_projects"
    ```
 
 **Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; software user guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
@@ -134,11 +135,11 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
 
 ## Operation
 
-1. Connect two board to your PC using the provided USB cable through the  USB connector.
+1. Connect two board to your PC using the provided USB cable through the USB connector.
 
 2. Open a terminal program and select the **WICED Peripheral UART** port for each board. Set the serial port parameters to 8N1 and 115200 baud.
 
-3. Program the board using with *mtb-example-btsdk-cyw208xx-data-logger* application one of the following:
+3. Program the board using the *mtb-example-btsdk-cyw208xx-data-logger* application with one of the following:
 
    <details><summary><b>Using Eclipse IDE for ModusToolbox&trade; software</b></summary>
 
@@ -150,7 +151,7 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
 
          ![](./images/figure2.png)
 
-         Instead of manually setting the UART port in the makefile, you can connect the boards one at a time to program the applications, and then connect both boards once programming is done.
+         Instead of manually setting the UART port in the makefile, you can connect the boards one at a time to program the applications, and then connect both boards when programming is done.
 
       3. Select the application project, *CYW208xx_Data_logger.dual_spi_master*, in the Project Explorer.  In the **Quick Panel**, scroll down, and click the **\<Application Name> Program** as shown in [Figure 3](#figure-3-programming-the-cyw208xx-device-from-modustoolbox). Repeat this step to program the other board with *CYW208xx_Data_logger.spi_slave_sensor* and ensure that the UART port selected is for the other board.
 
@@ -191,7 +192,7 @@ For a list of supported IDEs and more details, see the "Exporting to IDEs" secti
    New-line for receive data                        | Line feed (LF) or auto setting
 
 
-   1. The slave serial terminal window displays the received SPI command  and the accompanying response on the terminal window, as shown in [Figure 4](#figure-4-serial-terminal-output-of-spi-slave).
+   1. The slave serial terminal window displays the received SPI command and the accompanying response on the terminal window, as shown in [Figure 4](#figure-4-serial-terminal-output-of-spi-slave).
 
       **Figure 4. Serial terminal output of SPI slave**
       
@@ -240,21 +241,21 @@ The finite state machine contains three states:
 - `READ_UNIT`
 - `READ_TEMPERATURE`
 
-In each state, the slave is verified to be a known slave using a packet header before processing the data that is sent from the slave. If the master is not able to authenticate the slave, the master remains in the same state and retries. After five retries, the SPI interface is reset, and the master starts from the `SENSOR_DETECT` state. 
+In each state, the slave is verified to be a known slave using a packet header before processing the data that is sent from the slave. If the master is not able to authenticate the slave, the master remains in the same state and retries. After five attempts, the SPI interface is reset, and the master starts from the `SENSOR_DETECT` state. 
 
-In the `SENSOR_DETECT` state, the master requests the manufacturer ID to verify whether the slave’s manufacturer is Cypress. If the slave responds with an unknown manufacturer ID, the master informs the user that the slave’s identity could not be authenticated. If the slave responds with the expected manufacturer ID, the master enters the next state, `READ_UNIT`. A flowchart illustrating the operation is shown in [Figure 8](#figure-8-flowchart-of-sensor_detect-state).
+In the `SENSOR_DETECT` state, the master requests the manufacturer ID to verify whether the slave’s manufacturer is Cypress. If the slave responds with an unknown manufacturer ID, the master informs the user that the slave’s identity could not be authenticated. If the slave responds with the expected manufacturer ID, the master enters the next state, `READ_UNIT`. A flowchart illustrating the operation is shown in [Figure 8](#figure-8-flowchart-of-the-sensor_detect-state).
 
    **Figure 8. Flowchart of the SENSOR_DETECT state**
 
    ![](./images/figure8.png)
    
-In the `READ_UNIT` state, the master requests the unit ID to know the unit of temperature values provided by the slave. If the slave responds with an unknown unit ID, the master informs the user that the unit of temperature is unknown and tries to obtain the unit again. If the number of retries exceeds five, the master changes its state to `SENSOR_DETECT`. Otherwise, if the slave responds as expected, the master enters the next state, `READ_TEMPERATURE`. A flowchart illustrating the operation is shown in [Figure 9](#figure-9-flowchart-of-read_unit-state).
+In the `READ_UNIT` state, the master requests the unit ID to know the unit of temperature values provided by the slave. If the slave responds with an unknown unit ID, the master informs the user that the unit of temperature is unknown and tries to obtain the unit again. If the number of attempts exceeds five, the master changes its state to `SENSOR_DETECT`. Otherwise, if the slave responds as expected, the master enters the next state, `READ_TEMPERATURE`. A flowchart illustrating the operation is shown in [Figure 9](#figure-9-flowchart-of-the-read_unit-state).
 
    **Figure 9. Flowchart of the READ_UNIT state**
 
    ![](./images/figure9.png)
 
-In the `READ_TEMPERATURE` state, the master requests the temperature from the slave. The temperature reading received comprises the decimal and fractional parts of the temperature. For instance, if the temperature reading is 24.44 °C, the slave sends 2444 as the data. The master then stores the quotient as the decimal part of temperature and remainder as the fractional part of temperature in the temperature record. The RTC is used to obtain the time when the temperature reading was received so that it can be included in the temperature record. The number of the temperature record is also updated and pushed to the queue. The queue occupancy is checked every time after a temperature record is pushed to the queue. Once the queue occupancy equals the size of a page in SFLASH, the thread sets a semaphore signaling the thread handling SFLASH to start popping data from queue to write to SFLASH. A flowchart illustrating the operation is shown in [Figure 10](#figure-10-flowchart-of-read_temperature-state). 
+In the `READ_TEMPERATURE` state, the master requests the temperature from the slave. The temperature reading received comprises the decimal and fractional parts of the temperature. For instance, if the temperature reading is 24.44 °C, the slave sends 2444 as the data. The master then stores the quotient as the decimal part of temperature and remainder as the fractional part of temperature in the temperature record. The RTC is used to obtain the time when the temperature reading was received so that it can be included in the temperature record. The number of the temperature record is also updated and pushed to the queue. The queue occupancy is checked every time after a temperature record is pushed to the queue. Once the queue occupancy equals the size of a page in SFLASH, the thread sets a semaphore signaling the thread handling SFLASH to start popping data from queue to write to SFLASH. A flowchart illustrating the operation is shown in [Figure 10](#figure-10-flowchart-of-the-read_temperature-state). 
 
    **Figure 10. Flowchart of the READ_TEMPERATURE state**
 
@@ -280,9 +281,9 @@ This section describes the operation of the slave. As with the master, `applicat
 - Unit ID: The slave responds with its unit ID. 
 - Temperature: The slave responds with a temperature reading obtained by acquiring ADC samples.
 
-The slave reads from SPI Rx buffers only, when its Tx buffers are empty. If the slave is unable to empty the Tx buffers after several retries, the SPI interface is reset. A flowchart illustrating the operation of the slave is shown in [Figure 11](#figure-11-flowchart-showing-slave-operation).
+The slave reads from SPI Rx buffers only, when its Tx buffers are empty. If the slave is unable to empty the Tx buffers after several attempts, the SPI interface is reset. A flowchart illustrating the operation of the slave is shown in [Figure 11](#figure-11-flowchart-showing-the-slave-operation).
 
-   **Figure 11. Flowchart showing slave operation**
+   **Figure 11. Flowchart showing the slave operation**
 
    ![](./images/figure11.png)
 
@@ -292,8 +293,8 @@ The application level source files for `spi_slave_sensor` are listed in [Table 4
 
    File name|Description
    -------- |-----------
-   spi_slave_thermistor.c| Contains the `application_start()` function, which is the entry point for execution of the user application code after device startup
-   thermistor_temp_db.c, thermistor_temp_db.h | Contain the function to map resistance to temperature values of the thermistor using a lookup table (from the thermistor datasheet)
+   *spi_slave_thermistor.c*| Contains the `application_start()` function, which is the entry point for execution of the user application code after device startup.
+   *thermistor_temp_db.c*, *thermistor_temp_db.h* | Contain the function to map resistance to temperature values of the thermistor using a lookup table (from the thermistor datasheet).
 
 
 
@@ -326,12 +327,13 @@ Document title: *CE226537* – *Bluetooth&reg; SPI-based datalogger*
  1.1.0   | Updated to support ModusToolbox&trade; software v2.1
  2.0.0   | Major update to support ModusToolbox&trade; software v2.2 <br> This version is not backward compatible with ModusToolbox&trade; software v2.1
  3.0.0   | Updated to support ModusToolbox&trade; software v2.3.1, BTSDK 3.0 and Updated Thermistor library
+ 3.1.0   | Added support for CYW920820M2EVB-01
 
 <br>
 
 ---------------------------------------------------------
 
-© Cypress Semiconductor Corporation, 2019-2021. This document is the property of Cypress Semiconductor Corporation, an Infineon Technologies company, and its affiliates ("Cypress").  This document, including any software or firmware included or referenced in this document ("Software"), is owned by Cypress under the intellectual property laws and treaties of the United States and other countries worldwide.  Cypress reserves all rights under such laws and treaties and does not, except as specifically stated in this paragraph, grant any license under its patents, copyrights, trademarks, or other intellectual property rights.  If the Software is not accompanied by a license agreement and you do not otherwise have a written agreement with Cypress governing the use of the Software, then Cypress hereby grants you a personal, non-exclusive, nontransferable license (without the right to sublicense) (1) under its copyright rights in the Software (a) for Software provided in source code form, to modify and reproduce the Software solely for use with Cypress hardware products, only internally within your organization, and (b) to distribute the Software in binary code form externally to end users (either directly or indirectly through resellers and distributors), solely for use on Cypress hardware product units, and (2) under those claims of Cypress’s patents that are infringed by the Software (as provided by Cypress, unmodified) to make, use, distribute, and import the Software solely for use with Cypress hardware products.  Any other use, reproduction, modification, translation, or compilation of the Software is prohibited.
+© Cypress Semiconductor Corporation, 2019-2022. This document is the property of Cypress Semiconductor Corporation, an Infineon Technologies company, and its affiliates ("Cypress").  This document, including any software or firmware included or referenced in this document ("Software"), is owned by Cypress under the intellectual property laws and treaties of the United States and other countries worldwide.  Cypress reserves all rights under such laws and treaties and does not, except as specifically stated in this paragraph, grant any license under its patents, copyrights, trademarks, or other intellectual property rights.  If the Software is not accompanied by a license agreement and you do not otherwise have a written agreement with Cypress governing the use of the Software, then Cypress hereby grants you a personal, non-exclusive, nontransferable license (without the right to sublicense) (1) under its copyright rights in the Software (a) for Software provided in source code form, to modify and reproduce the Software solely for use with Cypress hardware products, only internally within your organization, and (b) to distribute the Software in binary code form externally to end users (either directly or indirectly through resellers and distributors), solely for use on Cypress hardware product units, and (2) under those claims of Cypress’s patents that are infringed by the Software (as provided by Cypress, unmodified) to make, use, distribute, and import the Software solely for use with Cypress hardware products.  Any other use, reproduction, modification, translation, or compilation of the Software is prohibited.
 <br>
 TO THE EXTENT PERMITTED BY APPLICABLE LAW, CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH REGARD TO THIS DOCUMENT OR ANY SOFTWARE OR ACCOMPANYING HARDWARE, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  No computing device can be absolutely secure.  Therefore, despite security measures implemented in Cypress hardware or software products, Cypress shall have no liability arising out of any security breach, such as unauthorized access to or use of a Cypress product. CYPRESS DOES NOT REPRESENT, WARRANT, OR GUARANTEE THAT CYPRESS PRODUCTS, OR SYSTEMS CREATED USING CYPRESS PRODUCTS, WILL BE FREE FROM CORRUPTION, ATTACK, VIRUSES, INTERFERENCE, HACKING, DATA LOSS OR THEFT, OR OTHER SECURITY INTRUSION (collectively, "Security Breach").  Cypress disclaims any liability relating to any Security Breach, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any Security Breach.  In addition, the products described in these materials may contain design defects or errors known as errata which may cause the product to deviate from published specifications. To the extent permitted by applicable law, Cypress reserves the right to make changes to this document without further notice. Cypress does not assume any liability arising out of the application or use of any product or circuit described in this document. Any information provided in this document, including any sample design information or programming code, is provided only for reference purposes.  It is the responsibility of the user of this document to properly design, program, and test the functionality and safety of any application made of this information and any resulting product.  "High-Risk Device" means any device or system whose failure could cause personal injury, death, or property damage.  Examples of High-Risk Devices are weapons, nuclear installations, surgical implants, and other medical devices.  "Critical Component" means any component of a High-Risk Device whose failure to perform can be reasonably expected to cause, directly or indirectly, the failure of the High-Risk Device, or to affect its safety or effectiveness.  Cypress is not liable, in whole or in part, and you shall and hereby do release Cypress from any claim, damage, or other liability arising from any use of a Cypress product as a Critical Component in a High-Risk Device. You shall indemnify and hold Cypress, including its affiliates, and its directors, officers, employees, agents, distributors, and assigns harmless from and against all claims, costs, damages, and expenses, arising out of any claim, including claims for product liability, personal injury or death, or property damage arising from any use of a Cypress product as a Critical Component in a High-Risk Device. Cypress products are not intended or authorized for use as a Critical Component in any High-Risk Device except to the limited extent that (i) Cypress’s published data sheet for the product explicitly states Cypress has qualified the product for use in a specific High-Risk Device, or (ii) Cypress has given you advance written authorization to use the product as a Critical Component in the specific High-Risk Device and you have signed a separate indemnification agreement.
 <br>
